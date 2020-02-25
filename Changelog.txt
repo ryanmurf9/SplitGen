@@ -1,0 +1,23 @@
+Fixes:
+-Optimize inline for p tag
+-Clean up and document
+-Add Enter/Arrow support to move from box to box
+
+V1.1:
+-Added 1600m Split
+-Fixed null values bug
+-Added minuteFix() which returns the proper seconds
+-Added minutes column
+-Optimization Fixes
+
+V1.2:
+-Redesigned Frontend
+-Added Errorhandling for invalid distance
+-Fixed Linewrapping with table results
+-Added 3000m and 3200m split
+-Truncates results decimals to two places
+-Optimization fixes
+
+V1.3:
+-Added Custom Distance Option
+
