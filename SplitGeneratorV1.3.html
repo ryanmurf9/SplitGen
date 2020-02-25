@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<!-- SPLIT GENERATOR VERSION 1.3 DESIGNED BY RYAN MURPHY-->
+
+<head>
+    <title>Split Generator</title>
+</head>
+
+<body>
+    <!-- CSS Style for Table Borders and p tag-->
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            background-color: #FFFB7F;
+        }
+
+        p {
+            white-space: nowrap;
+        }
+
+        body {
+            background-color: palegreen;
+        }
+    </style>
+
+    <!--Title at the top above the table-->
+    <h1 style="display:inline">Run Split Calculator</h1>
+    <h6 style="display:inline">V1.3 by Ryan Murphy</h6><br><br>
+
+    <table style="width:100%">
+        <tr style="width:50%">
+            <th align="left">Enter Run Stats:</th>
+            <th align="left">Results:</th>
+        </tr>
+        <tr>
+            <!--Run Form-->
+            <th align="left" style="width:50%">
+                <form>
+                    <label for="hours">Time (H/M/S):</label><br>
+                    <input type="text" id="hours" name="Hours" size="5">
+                    <label for="mins">:</label>
+                    <input type="text" id="mins" name="Mins" size="5">
+                    <label for="secs">:</label>
+                    <input type="text" id="secs" name="Secs" size="5">
+                    <br><br>
+                    <label for="dist">Distance:</label>
+                    <input type="text" id="dist">
+                    <label for="mmi"></label>
+                    <select id="mmi">
+                        <option value="0">mi</option>
+                        <option value="1">m</option>
+                    </select><br><br>
+                    Custom Distance: <input type="text" id="cdist" size="8">
+                    <select id="cmmi">
+                        <option value="0">mi</option>
+                        <option value="1">m</option>
+                    </select>
+                    <br><br>
+                    <input type="button" value="Calculate" onclick="calculate()">
+                </form>
+            </th>
+            <!-- Output Column with results-->
+            <th align="left" valign="top">
+                100m: <p style="display:inline" id="split100"></p><br>
+                200m: <p style="display:inline" id="split200"></p><br>
+                400m: <p style="display:inline" id="split400"></p><br>
+                800m: <p style="display:inline" id="split800"></p><br>
+                1600m: <p style="display:inline" id="split1600"></p><br>
+                3000m:<p style="display:inline" id="split3000"></p><br>
+                3200m:<p style="display:inline" id="split3200"></p><br>
+                Custom: <p style="display:inline" id="splitCust"></p>
+                <p style="display:inline" id="errorHandle"></p>
+            </th>
+        </tr>
+    </table>
+    </table>
+
+
+    <!-- Start of JavaScript -->
+
+    <script>
+        function calculate() {
+            var sHours = parseFloat(document.getElementById('hours').value);
+            var sMins = parseFloat(document.getElementById('mins').value);
+            var sSecs = parseFloat(document.getElementById('secs').value);
+            var sDist1 = parseFloat(document.getElementById('dist').value);
+            var sMMI = parseFloat(document.getElementById('mmi').value);
+            var scDist = parseFloat(document.getElementById('cdist').value);
+            var sCMMI = parseFloat(document.getElementById('cmmi').value);
+
+
+            //Sets time equal to zero if no value is input
+            if (isNaN(sHours)) {
+                sHours = 0;
+            }
+            if (isNaN(sMins)) {
+                sMins = 0;
+            }
+            if (isNaN(sSecs)) {
+                sSecs = 0;
+            }
+            if(isNaN(scDist))
+            {
+                scDist = 0;
+            }
+            if (isNaN(sDist1) || sDist1 == 0)//Cancels calculations if invalid distance is input
+            {
+                document.getElementById("errorHandle").innerHTML = "Invalid Distance Value!";
+                document.getElementById("split100").innerHTML = '';
+                document.getElementById("split200").innerHTML = '';
+                document.getElementById("split400").innerHTML = '';
+                document.getElementById("split800").innerHTML = '';
+                document.getElementById("split1600").innerHTML = '';
+                document.getElementById("split3000").innerHTML = '';
+                document.getElementById("split3200").innerHTML = '';
+                document.getElementById("splitCust").innerHTML = '';
+                return 0;
+            }
+
+            //Sets error to null if no error is discovered
+            document.getElementById("errorHandle").innerHTML = null;
+
+            //Converts all time to seconds
+            var totSecs = (sHours * 3600) + (sMins * 60) + (sSecs);
+
+            //Changes miles to meters if necessary
+            var mMeters = sDist1;
+            if (sMMI == 0) {
+
+                mMeters *= 1600;
+            }
+            
+            var mCust = 0;
+            if(sCMMI == 0)
+            {
+                mCust = scDist*1600;
+            }
+            else 
+            {
+                mCust = scDist;
+            }
+
+            //Calculates splits in seconds
+            var mps = mMeters / totSecs;
+            var m100 = 100 / mps;
+            var m200 = 200 / mps;
+            var m400 = 400 / mps;
+            var m800 = 800 / mps;
+            var m1600 = 1600 / mps;
+            var m3000 = 3000 / mps;
+            var m3200 = 3200 / mps;
+            mCust = mCust / mps;
+            
+            //Outputs back to the HTML
+            document.getElementById("split100").innerHTML = trunc(m100) + " secs";
+            document.getElementById("split200").innerHTML = trunc(m200) + " secs";
+            document.getElementById("split400").innerHTML = trunc(m400) + " secs / " + parseInt(m400 / 60) + ":" + minuteFix(m400 % 60) + " min";
+            document.getElementById("split800").innerHTML = trunc(m800) + " secs / " + parseInt(m800 / 60) + ":" + minuteFix(m800 % 60) + " min";
+            document.getElementById("split1600").innerHTML = trunc(m1600) + " secs / " + parseInt(m1600 / 60) + ":" + minuteFix(m1600 % 60) + " min";
+            document.getElementById("split3000").innerHTML = trunc(m3000) + " secs / " + parseInt(m3000 / 60) + ":" + minuteFix(m3000 % 60) + " min";
+            document.getElementById("split3200").innerHTML = trunc(m3200) + " secs / " + parseInt(m3200 / 60) + ":" + minuteFix(m3200 % 60) + " min";
+            document.getElementById("splitCust").innerHTML = trunc(mCust) + " secs / " + parseInt(mCust / 60) + ":" + minuteFix(mCust % 60) + " min";
+        }
+
+        //Appends 0 to front of parameter if less than 10 or just returns the number otherwise
+        function minuteFix(x) {
+            if (x < 10) {
+                return "0" + Number((x).toFixed(2));
+            }
+            else {
+                return Number((x).toFixed(2));
+            }
+        }
+
+        //Truncates parameter to two places then returns it
+        function trunc(x) {
+            return Number((x).toFixed(2));
+        }
+
+    </script>
+</body>
+
+</html>
